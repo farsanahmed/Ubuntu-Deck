@@ -13,4 +13,3 @@ object ProotConfig {
     // Environment
     const val PROOT_TMP_DIR_NAME = "proot_tmp"
 }
-[took 0.2s]

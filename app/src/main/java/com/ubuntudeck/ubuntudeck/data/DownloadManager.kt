@@ -39,4 +39,3 @@ class ResumableDownloader(private val context: Context) {
         throw NotImplementedError("Download not yet implemented")
     }
 }
-[took 0.2s]

@@ -32,4 +32,3 @@ The app scaffolds correctly. However, the build environment in this harness may 
 6. Get proot shell working in terminal
 
 **Note on proot source:** We need to either build from Termux sources or obtain from Termux package with proper attribution and checksum. This must be documented before including binaries.
-[took 0.1s]
