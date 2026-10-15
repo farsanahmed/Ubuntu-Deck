@@ -201,6 +201,7 @@ class RootfsManager(private val context: Context) {
                             try {
                                 Files.createLink(Paths.get(entryFile.absolutePath), Paths.get(target.absolutePath))
                             } catch (e: Exception) {
+                                Timber.w("Hardlink link() failed for $entryName -> $target: ${e.message}. Falling back to copy.")
                                 copyFile(target, entryFile)
                             }
                         } else {
@@ -268,7 +269,7 @@ class RootfsManager(private val context: Context) {
 
     fun getProotBinaryPath(): String? {
         val libDir = context.applicationInfo.nativeLibraryDir
-        val prootFile = File(libDir, "proot")
+        val prootFile = File(libDir, "libproot.so")
         return if (prootFile.exists()) prootFile.absolutePath else null
     }
 }

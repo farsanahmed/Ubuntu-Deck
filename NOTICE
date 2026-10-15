@@ -4,10 +4,11 @@ UbuntuDeck - A native Android app running Ubuntu 22.04 XFCE4 desktop
 
 This product includes software licensed under various licenses:
 
-1. proot
-   - License: GPLv2/GPLv3
-   - Source: https://github.com/termux/proot
-   - Copyright: termux/proot contributors
+1. proot (shipped as jniLibs/arm64-v8a/libproot.so)
+   - License: GPLv2
+   - Source: https://github.com/ysdragon/proot-static/releases/download/v5.4.0/proot-aarch64-static
+   - SHA256: 45e81182f839a1752d8c8408e7d4569a58ae51d4331326d7f662a105f859ce79
+   - Copyright: proot-me/proot upstream (STMicroelectronics)
 
 2. Termux terminal-emulator and terminal-view libraries
    - License: GPLv3

@@ -32,6 +32,18 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug
 
+      - name: Verify libproot.so packaged in APK
+        run: |
+          APK=$(ls app/build/outputs/apk/debug/app-debug.apk)
+          echo "Checking $APK for lib/arm64-v8a/libproot.so"
+          if unzip -l "$APK" | grep -q "lib/arm64-v8a/libproot\.so"; then
+            echo "✓ libproot.so found in APK"
+          else
+            echo "✗ libproot.so NOT found in APK!"
+            unzip -l "$APK" | grep lib/arm64-v8a || echo "No arm64-v8a libs found"
+            exit 1
+          fi
+
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -63,6 +75,18 @@ jobs:
 
       - name: Build release APK
         run: ./gradlew assembleRelease
+
+      - name: Verify libproot.so packaged in release APK
+        run: |
+          APK=$(ls app/build/outputs/apk/release/app-release*.apk)
+          echo "Checking $APK for lib/arm64-v8a/libproot.so"
+          if unzip -l "$APK" | grep -q "lib/arm64-v8a/libproot\.so"; then
+            echo "✓ libproot.so found in APK"
+          else
+            echo "✗ libproot.so NOT found in APK!"
+            unzip -l "$APK" | grep lib/arm64-v8a || echo "No arm64-v8a libs found"
+            exit 1
+          fi
 
       - name: Upload release APK
         uses: actions/upload-artifact@v4

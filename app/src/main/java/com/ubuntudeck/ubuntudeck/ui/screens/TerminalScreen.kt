@@ -168,6 +168,13 @@ fun TerminalScreen() {
                                 extractStatusState.value = "Extraction complete."
                                 isRootfsInstalledState.value = true
                                 log("Extraction complete: ${result.file.absolutePath}")
+                                // Delete the .tar.gz only after successful extraction + verification
+                                try {
+                                    rootfsManager.getArchiveFile().delete()
+                                    log("Deleted archive file after verified extraction.")
+                                } catch (e: Exception) {
+                                    log("Could not delete archive: ${e.message}")
+                                }
                             }
                             is RootfsResult.Failure -> {
                                 extractStatusState.value = "Extraction failed: ${result.message}"
@@ -242,15 +249,26 @@ fun TerminalScreen() {
                     Text(text = if (testCommandRunningState.value) "Running…" else "Run test command")
                 }
                 testCommandOutputState.value?.let { output ->
-                    Text(
-                        text = output,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)),
-                        textAlign = TextAlign.Start
-                    )
+                    Column {
+                        Text(
+                            text = "Test output (tap to copy):",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                        )
+                        Text(
+                            text = output,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .background(MaterialTheme.colorScheme.surfaceVariant, shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                                .clickable(onClick = {
+                                    android.content.ClipboardManager.getSystemService(context).setText(output)
+                                }),
+                            textAlign = TextAlign.Start,
+                            maxLines = 20
+                        )
+                    }
                 }
             }
         }

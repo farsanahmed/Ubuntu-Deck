@@ -1,7 +1,7 @@
 # proot Binary Information
 
 ## Required files in jniLibs/arm64-v8a/
-- proot (main binary, statically linked, self-contained)
+- libproot.so (main binary, statically linked, self-contained)
 
 ## Source / License / Checksum
 - **URL:** https://github.com/ysdragon/proot-static/releases/download/v5.4.0/proot-aarch64-static
@@ -16,6 +16,7 @@
 ## Environment variables to set
 - `PROOT_LOADER` = path to loader in nativeLibraryDir (NOT needed for static build)
 - `PROOT_TMP_DIR` = writable app dir (e.g., cacheDir/proot_tmp)
+- `PROOT_NO_SECCOMP=1` = optional; disable seccomp filtering if proot crashes on the device (off by default)
 
 ## Launch requirements
 - Must run from nativeLibraryDir (Android 10+ exec restrictions) - we set extractNativeLibs=true and useLegacyPackaging=true
@@ -23,7 +24,7 @@
 - useLegacyPackaging = true in build.gradle.kts ✓
 
 ## Verification
-- Binary tracked in git: app/src/main/jniLibs/arm64-v8a/proot
+- Binary tracked in git: app/src/main/jniLibs/arm64-v8a/libproot.so
 - SHA256 verified against downloaded file
 - Checksum recorded in ASSETS.md
 
