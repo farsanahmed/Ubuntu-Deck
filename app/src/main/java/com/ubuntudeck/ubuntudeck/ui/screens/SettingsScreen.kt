@@ -93,12 +93,12 @@ fun SettingsScreen() {
                                 Text(
                                     text = item.title,
                                     style = MaterialTheme.typography.bodyLarge,
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.fillMaxWidth()
                                 )
                                 Text(
                                     text = item.summary,
                                     style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.weight(2f),
+                                    modifier = Modifier.fillMaxWidth(),
                                     maxLines = 2
                                 )
                             }
