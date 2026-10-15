@@ -28,3 +28,4 @@
 - GATE: cat /etc/os-release shows Ubuntu 22.04, apt update runs (once functional)
 - RootfsManager enhanced with progress tracking, storage checks [STUB]
 - ProotLauncher enhanced with env setup (PROOT_LOADER, PROOT_TMP_DIR) [STUB]
+- Terminal/VNC views updated with clearer [STUB] markers
