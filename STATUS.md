@@ -20,3 +20,9 @@
 - Resumable download, extraction, free space check
 - Launch proot shell in terminal tab
 - GATE: cat /etc/os-release shows Ubuntu 22.04, apt update runs
+
+## Phase 3 (In Progress)
+- Infrastructure code to be implemented: resumable download, extraction, storage check, proot launcher, terminal integration
+- Need to pin rootfs source URL, size, SHA256
+- Need proot binary + loader with source/license/checksum
+- GATE: cat /etc/os-release shows Ubuntu 22.04, apt update runs (once functional)
