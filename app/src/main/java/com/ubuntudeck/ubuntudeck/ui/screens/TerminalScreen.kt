@@ -12,4 +12,3 @@ fun TerminalScreen() {
     val prootLauncher = ProotLauncher(context)
     TerminalView(prootLauncher = prootLauncher)
 }
-[took 0.1s]

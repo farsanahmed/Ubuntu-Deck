@@ -81,4 +81,3 @@ private fun ColumnStub(title: String, message: String) {
         }
     }
 }
-[took 0.2s]
