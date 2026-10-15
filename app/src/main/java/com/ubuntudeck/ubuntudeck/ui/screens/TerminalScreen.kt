@@ -126,7 +126,7 @@ fun TerminalScreen() {
         // Buttons row
         androidx.compose.foundation.layout.Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = HorizontalArrangement.SpaceBetween
+            horizontalArrangement = androidx.compose.foundation.layout.HorizontalArrangement.SpaceBetween
         ) {
             Button(
                 onClick = {
