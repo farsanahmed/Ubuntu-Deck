@@ -1,6 +1,7 @@
 package com.ubuntudeck.ubuntudeck.ui.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -116,6 +117,28 @@ fun SettingsScreen() {
                                     style = MaterialTheme.typography.bodySmall,
                                     modifier = Modifier.fillMaxWidth(),
                                     maxLines = 2
+                                )
+                            }
+                        }
+                    }
+                    is SettingItem.ToggleItem -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        ) {
+                            androidx.compose.foundation.layout.Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = item.title,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Switch(
+                                    checked = item.checked,
+                                    onCheckedChange = item.onCheckedChange
                                 )
                             }
                         }
