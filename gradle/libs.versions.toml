@@ -38,6 +38,8 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
+termux-terminal-view = { group = "com.github.termux.termux-app", name = "terminal-view", version.ref = "terminalView" }
+termux-terminal-emulator = { group = "com.github.termux.termux-app", name = "terminal-emulator", version.ref = "terminalEmulator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

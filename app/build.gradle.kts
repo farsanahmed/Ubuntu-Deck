@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.commons.compress)
     implementation(libs.timber)
     implementation(libs.coil.compose)
+    implementation(libs.termux.terminal.view)
+    implementation(libs.termux.terminal.emulator)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
