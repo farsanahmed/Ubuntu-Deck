@@ -15,9 +15,6 @@ okhttp = "4.12.0"
 commonsCompress = "1.27.1"
 timber = "5.0.1"
 coilCompose = "2.7.0"
-terminalView = "0.118.1"
-terminalEmulator = "0.118.1"
-avnc = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,11 +38,9 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
-termux-terminal-view = { group = "com.termux", name = "terminal-view", version.ref = "terminalView" }
-termux-terminal-emulator = { group = "com.termux", name = "terminal-emulator", version.ref = "terminalEmulator" }
-avnc-viewer = { group = "com.github.tigervnc", name = "tigervnc", version = "1.12.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+[took 0.3s]
