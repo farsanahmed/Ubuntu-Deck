@@ -1,40 +1,18 @@
-# UbuntuDeck Status
+# UbuntuDeck - Status
 
-## Phase 2 (Scaffold) - DONE
-- Created complete Android project structure (Kotlin + Jetpack Compose, arm64-v8a)
-- Configured Gradle with extractNativeLibs=true, useLegacyPackaging=true
-- All UI screens stubbed with [STUB] markers
-- Foreground service stub with Android 12+ warning
-- LICENSE (GPLv3), NOTICE, .gitignore, README created
-- GitHub Actions CI workflow created
-- All code committed
+## Phase 2 (Scaffold) - done
+- Project structure created, stubs marked [STUB]
+- Gradle config with extractNativeLibs=true, useLegacyPackaging=true
+- LICENSE (GPLv3), NOTICE, CI workflow added
+- All screens have stub UI
 
-## Build Check
-- Project compiles structurally ✓ (valid Gradle configs)
-- Cannot run full Gradle build in this environment (no Android SDK/Gradle in PATH) - environment limitation, not project issue
-- CI workflow is valid ✓
+## Phase 3 (Rootfs + proot + terminal) - blocked (infrastructure)
+- Build check: cannot complete real Gradle build in this environment (no Gradle/Android SDK available). Gradle wrapper created but no installation.
+- Rootfs: not pinned yet (need actual source URL, real download size, SHA256)
+- proot: not sourced yet (need origin, license, checksum, binaries in jniLibs)
 
-## Next: Phase 3
-- Rootfs: pin source URL, size, SHA256
-- proot: document source/license/checksum, add to jniLibs with PROOT_LOADER/PROOT_TMP_DIR
-- Resumable download, extraction, free space check
-- Launch proot shell in terminal tab
-- GATE: cat /etc/os-release shows Ubuntu 22.04, apt update runs
+## Build environment note
+Gradle and Android SDK tools are not available in this environment. Cannot run `assembleDebug`. CI workflow is valid YAML but will require proper runner.
 
-## Phase 3 (In Progress)
-- Infrastructure code to be implemented: resumable download, extraction, storage check, proot launcher, terminal integration
-- Need to pin rootfs source URL, size, SHA256
-- Need proot binary + loader with source/license/checksum
-- GATE: cat /etc/os-release shows Ubuntu 22.04, apt update runs (once functional)
-- RootfsManager enhanced with progress tracking, storage checks [STUB]
-- ProotLauncher enhanced with env setup (PROOT_LOADER, PROOT_TMP_DIR) [STUB]
-- Terminal/VNC views updated with clearer [STUB] markers
-
-## Phase 3 Status
-- Infrastructure in place (RootfsManager, ProotLauncher) with clear [STUB] markers
-- UI updated with clearer stub text
-- Documentation added for rootfs sources and proot setup
-- Cannot proceed to full functional implementation without verified binaries (proot, rootfs). Following STOP CONDITIONS - need to document what's blocked.
-
-**BLOCKED for full functionality:** Missing verified proot binary + loader (arm64) with checksum, and pinned rootfs URL/size/SHA256. These are external artifacts that must be verified.
-- BLOCKED: Missing verified proot binary+loader (arm64) with checksum and pinned rootfs URL/size/SHA256
+**Next:** Proceed to document and prepare assets for Phase 3 as much as possible without requiring build, but note build cannot be verified. Mark as untested where appropriate.
+[took 0.2s]
