@@ -50,7 +50,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    // Required for extracting native libs to nativeLibraryDir on Android 10+
     packagingOptions {
         jniLibs {
             useLegacyPackaging = true
@@ -79,8 +78,6 @@ dependencies {
     implementation(libs.commons.compress)
     implementation(libs.timber)
     implementation(libs.coil.compose)
-    implementation(libs.termux.terminal.view)
-    implementation(libs.termux.terminal.emulator)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
