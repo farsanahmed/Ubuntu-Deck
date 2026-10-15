@@ -1,5 +1,7 @@
 #!/bin/sh
-# Gradle wrapper - delegates to system gradle if available, otherwise uses wrapper jar
+# Gradle wrapper script for UbuntuDeck
+# Delegates to system gradle if available (CI), otherwise uses wrapper jar
+
 if command -v gradle >/dev/null 2>&1; then
     exec gradle "$@"
 fi
