@@ -8,5 +8,8 @@
     <string name="stub_placeholder">[STUB] This screen is not yet implemented</string>
     <string name="service_notification_title">UbuntuDeck</string>
     <string name="service_notification_text">Session running</string>
-    <string name="android12_warning">WARNING: Android 12+ may kill background processes. If session stops unexpectedly, disable phantom process killing via ADB: adb shell settings put global settings_enable_monitor_phantom_procs false (may require additional OEM-specific steps)</string>
+    <string name="service_notification_channel_name">UbuntuDeck Session</string>
+    <string name="service_notification_channel_desc">Keeps Ubuntu proot/VNC session alive</string>
+    <string name="android12_warning">WARNING: Android 12+ may kill background processes. If session stops unexpectedly, disable phantom process killing via ADB:\nadb shell settings put global settings_enable_monitor_phantom_procs false\n(may require additional OEM-specific steps)</string>
 </resources>
+[took 0.2s]
