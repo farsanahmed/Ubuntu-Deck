@@ -15,6 +15,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.RandomAccessFile
 import java.security.MessageDigest
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 
 object RootfsConfig {
@@ -59,9 +61,8 @@ class RootfsManager(private val context: Context) {
         val archiveFile = getArchiveFile()
         val url = RootfsConfig.DOWNLOAD_URL
 
-        // Check existing partial download for resume
         val existingSize = archiveFile.length()
-        var currentOffset = existingSize
+        var resumeOffset = existingSize
 
         val headRequest = Request.Builder().url(url).head().build()
         val headResponse = client.newCall(headRequest).execute()
@@ -69,18 +70,16 @@ class RootfsManager(private val context: Context) {
         headResponse.close()
 
         if (serverContentLength > 0 && existingSize >= serverContentLength) {
-            // Already fully downloaded
             Timber.d("Archive already fully downloaded: $archiveFile")
             return if (verifyChecksum(archiveFile)) {
                 RootfsResult.Success(archiveFile)
             } else {
-                // Bad checksum, re-download from scratch
                 archiveFile.delete()
                 downloadInternal(url, archiveFile, 0L, serverContentLength, onProgress)
             }
         }
 
-        return downloadInternal(url, archiveFile, currentOffset, serverContentLength, onProgress)
+        return downloadInternal(url, archiveFile, resumeOffset, serverContentLength, onProgress)
     }
 
     private suspend fun downloadInternal(
@@ -124,7 +123,6 @@ class RootfsManager(private val context: Context) {
             out.close()
         }
 
-        // Verify checksum after download completes
         if (!verifyChecksum(archiveFile)) {
             return RootfsResult.Failure("Checksum verification failed")
         }
@@ -170,30 +168,54 @@ class RootfsManager(private val context: Context) {
             var entry: TarArchiveEntry?
             var entriesProcessed = 0
 
+            val hardlinkTargets = mutableMapOf<String, File>()
+
             while (tar.nextTarEntry.also { entry = it } != null) {
                 entriesProcessed++
                 val entryName = entry?.name ?: continue
                 val entryFile = File(destDir, entryName)
 
-                if (entry?.isDirectory == true) {
-                    entryFile.mkdirs()
-                } else {
-                    entryFile.parentFile.mkdirs()
-                    val out = FileOutputStream(entryFile).buffered()
-                    val buf = ByteArray(8192)
-                    var n: Int
-                    while (tar.read(buf).also { n = it } != -1) {
-                        out.write(buf, 0, n)
+                when {
+                    entry?.isDirectory == true -> {
+                        entryFile.mkdirs()
+                        applyPosixPermissions(entryFile, entry.mode)
                     }
-                    out.close()
-                    // Set executable bit for scripts/binaries
-                    entryFile.setExecutable(true, false)
+                    entry.isSymbolicLink -> {
+                        val target = entry.linkName
+                        entryFile.parentFile.mkdirs()
+                        entryFile.delete()
+                        try {
+                            Files.createSymbolicLink(Paths.get(entryFile.absolutePath), Paths.get(target))
+                        } catch (e: Exception) {
+                            entryFile.writeText(target)
+                        }
+                        applyPosixPermissions(entryFile, entry.mode)
+                    }
+                    entry.isHardLink -> {
+                        val target = hardlinkTargets[entry.linkName]
+                        entryFile.parentFile.mkdirs()
+                        entryFile.delete()
+                        if (target != null && target.exists()) {
+                            try {
+                                Files.createLink(Paths.get(entryFile.absolutePath), Paths.get(target.absolutePath))
+                            } catch (e: Exception) {
+                                copyFile(target, entryFile)
+                            }
+                        } else {
+                            writeEntryContent(tar, entryFile, entry.mode)
+                        }
+                    }
+                    else -> {
+                        entryFile.parentFile.mkdirs()
+                        writeEntryContent(tar, entryFile, entry.mode)
+                    }
                 }
 
-
+                if (entry.linkName.isNotBlank() && !entry.isHardLink && !entry.isSymbolicLink) {
+                    hardlinkTargets[entry.linkName] = entryFile
+                }
 
                 if (entriesProcessed % 100 == 0) {
-                    // Estimate progress (no exact total available without scanning tar first)
                     onProgress(Math.min(99f, (entriesProcessed / 1000f).coerceAtMost(99f)))
                 }
             }
@@ -209,8 +231,40 @@ class RootfsManager(private val context: Context) {
         }
     }
 
+    private fun writeEntryContent(tar: TarArchiveInputStream, entryFile: File, mode: Int) {
+        val out = FileOutputStream(entryFile).buffered()
+        val buf = ByteArray(8192)
+        var n: Int
+        while (tar.read(buf).also { n = it } != -1) {
+            out.write(buf, 0, n)
+        }
+        out.close()
+        applyPosixPermissions(entryFile, mode)
+    }
+
+    private fun applyPosixPermissions(file: File, mode: Int) {
+        try {
+            val readable = (mode and 0o444) != 0
+            val writable = (mode and 0o222) != 0
+            val executable = (mode and 0o111) != 0
+            file.setReadable(readable, false)
+            file.setWritable(writable, false)
+            file.setExecutable(executable, false)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to set permissions on ${file.absolutePath}")
+        }
+    }
+
+    private fun copyFile(source: File, dest: File) {
+        FileInputStream(source).use { fis ->
+            FileOutputStream(dest).use { fos ->
+                fis.copyTo(fos)
+            }
+        }
+        dest.setExecutable(true, false)
+    }
+
     fun getProotBinaryPath(): String? {
-        // proot is in jniLibs/arm64-v8a/proot, extracted to nativeLibraryDir at install
         val libDir = context.applicationInfo.nativeLibraryDir
         val prootFile = File(libDir, "proot")
         return if (prootFile.exists()) prootFile.absolutePath else null

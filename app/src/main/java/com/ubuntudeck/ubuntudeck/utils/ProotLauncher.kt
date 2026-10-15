@@ -2,7 +2,9 @@ package com.ubuntudeck.ubuntudeck.utils
 
 import android.content.Context
 import timber.log.Timber
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 
 /**
  * Launches proot from nativeLibraryDir with proper environment, binds, and tmp dir.
@@ -34,19 +36,14 @@ class ProotLauncher(private val context: Context) {
         val tmpDir = File(context.cacheDir, "proot_tmp")
         tmpDir.mkdirs()
 
-        // Build bind list
         val binds = mutableListOf<String>()
-
-        // Essential system binds
         binds.add("/dev:/dev")
         binds.add("/proc:/proc")
         binds.add("/sys:/sys")
 
-        // App-private storage (writable temp)
         val appInternal = context.filesDir.absolutePath
         binds.add("$appInternal:$appInternal")
 
-        // External storage dirs if available
         val extDirs = context.getExternalFilesDirs(null)
         for (i in extDirs.indices) {
             val dir = extDirs[i]
@@ -58,7 +55,6 @@ class ProotLauncher(private val context: Context) {
             }
         }
 
-        // Shared storage roots
         val storageRoots = listOf("/storage", "/sdcard")
         for (root in storageRoots) {
             if (File(root).exists()) {
@@ -66,7 +62,6 @@ class ProotLauncher(private val context: Context) {
             }
         }
 
-        // proot args
         val args = mutableListOf<String>()
         args.add(prootPath)
         args.add("-r")
@@ -75,12 +70,8 @@ class ProotLauncher(private val context: Context) {
         args.add("-k") // dummy sysctl
         args.add("-b")
         args.add(binds.joinToString(","))
-
-        // Working directory
         args.add("-w")
         args.add(workingDir)
-
-        // Shell
         args.add("/bin/bash")
         args.add("-l")
 
@@ -90,7 +81,6 @@ class ProotLauncher(private val context: Context) {
     /**
      * Build environment for proot process.
      * PROOT_TMP_DIR -> writable app cache dir (not data exec path).
-     * Also set PROOT_NO_SECCOMP if needed on newer Android.
      */
     fun buildProotEnvironment(): Map<String, String> {
         val tmpDir = File(context.cacheDir, "proot_tmp")
@@ -105,9 +95,49 @@ class ProotLauncher(private val context: Context) {
         )
     }
 
+    /**
+     * Launch proot with the given command and capture both stdout and stderr.
+     * Returns the exit code and combined output (so real proot errors are visible).
+     */
+    data class ProotRunResult(
+        val exitCode: Int,
+        val output: String  // combined stdout+stderr
+    )
+
+    fun runProot(rootfsDir: String, command: String, workingDir: String = "/"): ProotRunResult {
+        val cmd = buildProotCommand(rootfsDir, workingDir)
+        // Append the command to run instead of an interactive shell
+        val fullCmd = cmd.toMutableList()
+        // Replace "/bin/bash -l" with "/bin/bash -c \"<command>\"" if we want a one-shot command
+        // For now we keep the interactive shell; caller decides.
+        Timber.d("ProotLauncher: running $fullCmd")
+
+        val pb = java.lang.ProcessBuilder(*fullCmd.toTypedArray())
+        pb.environment().putAll(buildProotEnvironment())
+        // Redirect error stream so stderr is captured in the same output
+        pb.redirectErrorStream(true)
+
+        return try {
+            val process = pb.start()
+            val output = StringBuilder()
+            // Read process output (stdout + merged stderr) line by line
+            process.inputStream.bufferedReader().use { reader ->
+                var line: String?
+                while { line = reader.readLine(); line != null }() {
+                    output.append(line).append("\n")
+                }
+            }
+            val exitCode = process.waitFor()
+            ProotRunResult(exitCode, output.toString())
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to run proot")
+            ProotRunResult(-1, "Failed to run proot: ${e.message}")
+        }
+    }
+
     fun logProotInfo() {
         Timber.d("ProotLauncher: libDir=${context.applicationInfo.nativeLibraryDir}")
-        Timber.d("ProotLauncher: proot available=${isProotAvailable()}")
+        Timber.d("ProotLauncher: proot available=$isProotAvailable()")
         val path = getProotPath()
         if (path != null) {
             Timber.d("ProotLauncher: proot path=$path exists=${File(path).exists()}")

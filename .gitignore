@@ -31,7 +31,8 @@ google-services.json
 
 # Native libs (we may add proot binaries later - note these are large)
 app/src/main/jniLibs/**/*.so
-app/src/main/jniLibs/**/proot
+# proot binary IS tracked - it is a required app component (GPLv2, checksum verified)
+# app/src/main/jniLibs/**/proot
 
 # Rootfs (very large)
 app/src/main/assets/rootfs*

@@ -1,29 +1,30 @@
 # UbuntuDeck - Status
 
 ## Phase 2 (Scaffold) - done
-## Phase 3 (Rootfs + proot + terminal) - done (builds OK; device testing untested)
-- CI green: https://github.com/farsanahmed/Ubuntu-Deck/actions/runs/38804858087
-- RootfsManager: download+extract+checksum verify implemented
+- Project structure, Gradle, permissions, jniLibs dir, CI workflow
+
+## Phase 3 (Rootfs + proot + terminal) - CODE COMPLETE, UNTESTED ON DEVICE
+- **NOT verified on a real device.** No Android device available in this environment.
+- RootfsManager: download+extract+checksum verify implemented (Apache Commons Compress tar/gzip)
   - URL: https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-arm64-xfce4-V3MBB3.tar.gz
   - SHA256: d5290068b99740da5198a355b5152e0198fff126f0865f4c4634e509508a6da8
   - Size: ~2GB compressed, ~7GB free space required
+  - [GAP] tar extraction does NOT explicitly preserve symlinks/hardlinks (see Q2 below)
 - Proot binary: ysdragon/proot-static v5.4.0 (GPLv2, static, self-contained, SHA256 verified)
+  - BUT: .gitignore excludes app/src/main/jniLibs/**/proot -> binary NOT tracked in git. Must force-add or fix .gitignore before release.
 - ProotLauncher: builds proot command with binds and PROOT_TMP_DIR
-- Terminal: [STUB] - Termux terminal-emulator/terminal-view deps added, PTY wiring pending device test
+- Terminal: [STUB] - Termux terminal-emulator/terminal-view deps added via JitPack, real PTY wiring NOT implemented. Tab shows [STUB] placeholder.
 
-## Phase 4 (Desktop/VNC) - done (builds OK; device testing untested)
-- DesktopScreen: [STUB] placeholder with VNC/XFCE4 plan
-- Cannot verify XFCE4 visibility without device test -> UNTESTED
+## Phase 4 (Desktop/VNC) - STUB / NOT IMPLEMENTED
+- DesktopScreen: [STUB] placeholder. No VNC client, no TigerVNC/XFCE4 integration.
 
-## Phase 5 (Installer/service) - done (builds OK; device testing untested)
-- Foreground service: UbuntuDeckService with persistent notification, Android 12+ warning in strings.xml
-- InstallerScreen: [STUB] - Ollama, Claude Code (+PATH fix), Firefox installs; Cursor and Antigravity launch presets
-- Error handling/retry/log viewer: not implemented
+## Phase 5 (Installer/service) - STUB / NOT IMPLEMENTED
+- UbuntuDeckService: foreground service skeleton (notification only). No session management.
+- InstallerScreen: [STUB] placeholders. No package installs, no presets, no error handling/log viewer.
 
-## Phase 6 (Polish/release) - done (builds OK; device testing untested)
-- SettingsScreen: dark theme, session/storage/VNC/service settings, license/about items
-- CI: debug build green, release job on tags v* configured
-- LICENSE (GPLv3) and NOTICE files added
+## Phase 6 (Polish/release) - STUB / NOT IMPLEMENTED
+- SettingsScreen: [STUB] layout only. No actual settings logic.
+- LICENSE (GPLv3) and NOTICE files present.
 
-**Device testing:** NOT possible - no Android device available in this environment. All device-facing gates (rootfs download, proot execution, terminal PTY, XFCE4 desktop, package installs) are UNTESTED.
+**Device testing:** NOT possible. All device-facing gates UNTESTED ON DEVICE.
 [took 0.3s]
