@@ -6,18 +6,27 @@
 - LICENSE (GPLv3), NOTICE, CI workflow added
 - All screens have stub UI
 
-## Phase 3 (Rootfs + proot + terminal) - untested/in progress
-- Build check: UNTESTED (no Gradle/Android SDK in environment) - cannot run assembleDebug
-- CI workflow: valid YAML
-- Proot binaries: NOT included yet (must document origin/license/checksum and add to jniLibs)
-- Rootfs: URL/size/checksum not pinned yet
-- Implementation stubs added for storage check, resumable download
-- Terminal shell via proot: not implemented
-- GATE: cannot verify until implementation complete
+## Phase 3 (Rootfs + proot + terminal) - STUB / NOT IMPLEMENTED
+- RootfsManager: stub - isRootfsInstalled() returns false, getRequiredFreeSpaceBytes() returns 7GB
+- DownloadManager: stub - throws NotImplementedError
+- ProotLauncher: stub - isProotAvailable() returns false
+- TerminalView: stub UI - shows "[STUB] Terminal view - not implemented"
+- Rootfs URL/size/checksum: UNPINNED (in ASSETS.md)
+- proot binary: NOT included in jniLibs/arm64-v8a/ (directory is empty)
+- proot loader: not documented with source/checksum
+- Termux terminal libraries: INCLUDED in build.gradle.kts as `com.termux:terminal-view:0.118.1` and `com.termux:terminal-emulator:0.118.1` (Maven coordinates, not JitPack)
 
-## Phase 4 (Desktop/VNC) - not started
-## Phase 5 (Installer/service) - not started  
-## Phase 6 (Polish/release) - not started
+## Phase 4 (Desktop/VNC) - STUB / NOT IMPLEMENTED
+- DesktopScreen: stub UI
+- VncClientView: stub UI
 
-**Next:** Continue Phase 3 - need to identify and document actual rootfs source and proot binaries with full checksums.
+## Phase 5 (Installer/service) - STUB / NOT IMPLEMENTED
+- UbuntuDeckService: foreground service skeleton
+- InstallerScreen: stub UI
+
+## Phase 6 (Polish/release) - STUB / NOT IMPLEMENTED
+- SettingsScreen: stub UI
+- No signing keystore configured
+
+**Device testing:** NOT possible. All device-facing gates UNTESTED ON DEVICE.
 [took 0.2s]

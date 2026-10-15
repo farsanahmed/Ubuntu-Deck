@@ -29,9 +29,9 @@ google-services.json
 # Android Profiling
 *.hprof
 
-# Native libs (we may add proot binaries later - note these are large)
+# Native libs (.so) are excluded - proot binary IS tracked (it is a required app component)
 app/src/main/jniLibs/**/*.so
-app/src/main/jniLibs/**/proot
+# app/src/main/jniLibs/**/proot  <-- proot IS tracked, do NOT ignore
 
 # Rootfs (very large)
 app/src/main/assets/rootfs*
