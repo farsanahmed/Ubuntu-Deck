@@ -31,7 +31,7 @@ import timber.log.Timber
  */
 @Composable
 fun TerminalView(prootLauncher: ProotLauncher) {
-    val prootAvailable by remember { mutableStateOf(prootLauncher.isProotAvailable()) }
+    val prootAvailable = prootLauncher.isProotAvailable()
 
     Box(
         modifier = Modifier.fillMaxSize(),
