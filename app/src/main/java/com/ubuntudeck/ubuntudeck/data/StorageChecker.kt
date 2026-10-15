@@ -28,4 +28,3 @@ class StorageChecker(private val context: Context) {
         }
     }
 }
-[took 0.2s]

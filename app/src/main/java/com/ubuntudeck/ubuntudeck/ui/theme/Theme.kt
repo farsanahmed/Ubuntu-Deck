@@ -56,4 +56,3 @@ fun UbuntuDeckTheme(
         content = content
     )
 }
-[took 0.2s]

@@ -9,4 +9,3 @@ else
     echo "Gradle not found in PATH"
     exit 1
 fi
-[took 0.0s]

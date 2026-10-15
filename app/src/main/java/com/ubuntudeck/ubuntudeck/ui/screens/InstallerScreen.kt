@@ -27,4 +27,3 @@ fun InstallerScreen() {
         )
     }
 }
-[took 0.1s]

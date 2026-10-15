@@ -15,4 +15,3 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
 )
-[took 0.1s]

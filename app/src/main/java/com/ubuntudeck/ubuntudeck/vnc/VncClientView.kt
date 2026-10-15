@@ -32,4 +32,3 @@ fun VncClientView() {
         )
     }
 }
-[took 0.1s]

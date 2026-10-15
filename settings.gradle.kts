@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "UbuntuDeck"
 include(":app")
-[took 0.2s]

@@ -19,4 +19,3 @@ class ProotLauncher(private val context: Context) {
         return context.applicationInfo.nativeLibraryDir
     }
 }
-[took 0.1s]

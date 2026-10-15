@@ -49,4 +49,3 @@ avnc-viewer = { group = "com.github.tigervnc", name = "tigervnc", version = "1.1
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-[took 0.3s]

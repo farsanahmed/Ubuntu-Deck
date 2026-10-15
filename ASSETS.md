@@ -29,4 +29,3 @@ This document tracks all external binaries and archives with their sources, lice
 
 ## Notes
 All binaries placed in jniLibs/arm64-v8a/ must be set executable. Will run from nativeLibraryDir with PROOT_LOADER and PROOT_TMP_DIR set.
-[took 0.2s]

@@ -27,4 +27,3 @@ fun DesktopScreen() {
         )
     }
 }
-[took 0.1s]

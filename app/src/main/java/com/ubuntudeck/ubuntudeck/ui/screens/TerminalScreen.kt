@@ -27,4 +27,3 @@ fun TerminalScreen() {
         )
     }
 }
-[took 0.1s]

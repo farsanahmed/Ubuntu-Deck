@@ -24,4 +24,3 @@ class RootfsManager(private val context: Context) {
         return 7L * 1024 * 1024 * 1024 // ~7GB as specified
     }
 }
-[took 0.1s]

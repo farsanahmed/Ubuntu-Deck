@@ -108,4 +108,3 @@ fun MainScreen() {
         }
     }
 }
-[took 0.3s]

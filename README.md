@@ -32,4 +32,3 @@ A native Android app called "UbuntuDeck": a real Ubuntu 22.04 (Jammy) XFCE4 desk
 - arm64-v8a device
 - ~7GB free storage (required)
 - Android 10+ recommended
-[took 0.2s]

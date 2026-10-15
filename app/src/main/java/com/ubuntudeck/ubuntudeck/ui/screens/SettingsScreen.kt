@@ -27,4 +27,3 @@ fun SettingsScreen() {
         )
     }
 }
-[took 0.1s]

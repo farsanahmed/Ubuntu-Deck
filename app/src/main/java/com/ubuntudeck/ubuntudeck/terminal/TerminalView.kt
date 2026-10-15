@@ -31,4 +31,3 @@ fun TerminalView() {
         )
     }
 }
-[took 0.1s]

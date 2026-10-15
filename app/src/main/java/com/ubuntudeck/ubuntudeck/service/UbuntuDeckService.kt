@@ -62,4 +62,3 @@ class UbuntuDeckService : Service() {
             .build()
     }
 }
-[took 0.2s]

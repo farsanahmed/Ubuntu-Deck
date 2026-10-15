@@ -20,4 +20,3 @@
 ## Phase 6 (Polish/release) - not started
 
 **Next:** Continue Phase 3 - need to identify and document actual rootfs source and proot binaries with full checksums.
-[took 0.2s]
