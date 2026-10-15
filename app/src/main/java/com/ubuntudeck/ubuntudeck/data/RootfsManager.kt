@@ -193,7 +193,7 @@ class RootfsManager(private val context: Context) {
                         }
                         applyPosixPermissions(entryFile, mode)
                     }
-                    currentEntry.isHardLink() -> {
+                    currentEntry.getLinkFlag() == TarArchiveEntry.LF_LINK -> {
                         val target = hardlinkTargets[currentEntry.linkName]
                         entryFile.parentFile.mkdirs()
                         entryFile.delete()
@@ -213,7 +213,7 @@ class RootfsManager(private val context: Context) {
                     }
                 }
 
-                if (currentEntry.linkName.isNotBlank() && !currentEntry.isHardLink() && !currentEntry.isSymbolicLink()) {
+                if (currentEntry.linkName.isNotBlank() && currentEntry.getLinkFlag() != TarArchiveEntry.LF_LINK && currentEntry.getLinkFlag() != TarArchiveEntry.LF_SYMLINK) {
                     hardlinkTargets[currentEntry.linkName] = entryFile
                 }
 

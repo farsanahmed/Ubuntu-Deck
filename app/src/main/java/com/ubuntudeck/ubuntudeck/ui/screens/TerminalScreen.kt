@@ -1,6 +1,7 @@
 package com.ubuntudeck.ubuntudeck.ui.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +30,7 @@ import android.content.Context
 import com.ubuntudeck.ubuntudeck.R
 import com.ubuntudeck.ubuntudeck.data.RootfsConfig
 import com.ubuntudeck.ubuntudeck.data.RootfsManager
-import com.ubuntudeck.ubuntudeck.data.RootfsManager.RootfsResult
+import com.ubuntudeck.ubuntudeck.data.RootfsResult
 import com.ubuntudeck.ubuntudeck.data.StorageChecker
 import com.ubuntudeck.ubuntudeck.utils.ProotLauncher
 import com.ubuntudeck.ubuntudeck.utils.ProotLauncher.ProotRunResult
