@@ -37,3 +37,4 @@
 - Cannot proceed to full functional implementation without verified binaries (proot, rootfs). Following STOP CONDITIONS - need to document what's blocked.
 
 **BLOCKED for full functionality:** Missing verified proot binary + loader (arm64) with checksum, and pinned rootfs URL/size/SHA256. These are external artifacts that must be verified.
+- BLOCKED: Missing verified proot binary+loader (arm64) with checksum and pinned rootfs URL/size/SHA256
