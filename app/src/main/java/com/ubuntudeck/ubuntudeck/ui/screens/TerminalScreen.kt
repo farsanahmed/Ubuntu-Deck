@@ -264,7 +264,7 @@ fun TerminalScreen() {
                                 .background(MaterialTheme.colorScheme.surfaceVariant, shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
                                 .clickable(onClick = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                                    clipboard.primaryClip = android.content.ClipData.newPlainText("test output", output)
+                                    clipboard.setPrimaryClip(android.content.ClipData.newPlainText("test output", output))
                                 }),
                             textAlign = TextAlign.Start,
                             maxLines = 20
