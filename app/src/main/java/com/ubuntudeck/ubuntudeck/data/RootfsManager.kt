@@ -3,7 +3,6 @@ package com.ubuntudeck.ubuntudeck.data
 import android.content.Context
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.ResponseBody
 import timber.log.Timber
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
@@ -110,10 +109,10 @@ class RootfsManager(private val context: Context) {
             val out = RandomAccessFile(archiveFile, "rw")
             out.seek(resumeOffset)
             val buffer = ByteArray(8192)
-            var read: Int
             val input = body.byteStream()
 
-            while (read(input, buffer) != -1 && read != 0) {
+            var read: Int
+            while (input.read(buffer).also { read = it } != -1) {
                 out.write(buffer, 0, read)
                 downloaded += read
                 if (serverContentLength > 0) {
@@ -131,10 +130,6 @@ class RootfsManager(private val context: Context) {
         }
 
         return RootfsResult.Success(archiveFile)
-    }
-
-    private fun read(input: java.io.InputStream, buffer: ByteArray): Int {
-        return input.read(buffer)
     }
 
     suspend fun verifyChecksum(file: File): Boolean {
@@ -177,14 +172,15 @@ class RootfsManager(private val context: Context) {
 
             while (tar.nextTarEntry.also { entry = it } != null) {
                 entriesProcessed++
-                val entryFile = File(destDir, entry.name)
+                val entryName = entry?.name ?: continue
+                val entryFile = File(destDir, entryName)
 
-                if (entry.isDirectory) {
+                if (entry?.isDirectory == true) {
                     entryFile.mkdirs()
                 } else {
                     entryFile.parentFile.mkdirs()
                     val out = FileOutputStream(entryFile).buffered()
-                    tar.transferTo(out)
+                    entry?.transferTo(out)
                     out.close()
                     // Set executable bit for scripts/binaries
                     entryFile.setExecutable(true, false)

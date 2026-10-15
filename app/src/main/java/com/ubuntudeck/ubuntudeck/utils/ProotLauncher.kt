@@ -1,7 +1,6 @@
 package com.ubuntudeck.ubuntudeck.utils
 
 import android.content.Context
-import android.os.Build
 import timber.log.Timber
 import java.io.File
 
@@ -47,8 +46,8 @@ class ProotLauncher(private val context: Context) {
         val appInternal = context.filesDir.absolutePath
         binds.add("$appInternal:$appInternal")
 
-        // External storage if available
-        context.externalFilesDirs?.forEach { dir ->
+        // External storage dirs if available
+        for (dir in context.externalFilesDirs) {
             val abs = dir.absolutePath
             if (abs != appInternal) {
                 binds.add("$abs:$abs")
@@ -57,7 +56,7 @@ class ProotLauncher(private val context: Context) {
 
         // Shared storage roots
         val storageRoots = listOf("/storage", "/sdcard")
-        storageRoots.forEach { root ->
+        for (root in storageRoots) {
             if (File(root).exists()) {
                 binds.add("$root:$root")
             }
@@ -98,9 +97,7 @@ class ProotLauncher(private val context: Context) {
             "HOME" to "/root",
             "PATH" to "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
             "TERM" to "xterm-256color",
-            "LANG" to "C.UTF-8",
-            // On Android 15+ seccomp may restrict ptrace; proot-static works around this
-            // but we keep it optional
+            "LANG" to "C.UTF-8"
         )
     }
 
