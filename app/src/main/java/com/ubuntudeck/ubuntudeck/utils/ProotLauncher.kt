@@ -123,8 +123,10 @@ class ProotLauncher(private val context: Context) {
             // Read process output (stdout + merged stderr) line by line
             process.inputStream.bufferedReader().use { reader ->
                 var line: String?
-                while { line = reader.readLine(); line != null }() {
+                line = reader.readLine()
+                while (line != null) {
                     output.append(line).append("\n")
+                    line = reader.readLine()
                 }
             }
             val exitCode = process.waitFor()

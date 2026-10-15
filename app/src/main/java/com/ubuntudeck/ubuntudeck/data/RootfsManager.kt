@@ -171,17 +171,19 @@ class RootfsManager(private val context: Context) {
             val hardlinkTargets = mutableMapOf<String, File>()
 
             while (tar.nextTarEntry.also { entry = it } != null) {
+                val currentEntry = entry ?: continue
                 entriesProcessed++
-                val entryName = entry?.name ?: continue
+                val entryName = currentEntry.name
                 val entryFile = File(destDir, entryName)
+                val mode = currentEntry.mode
 
                 when {
-                    entry?.isDirectory == true -> {
+                    currentEntry.isDirectory() -> {
                         entryFile.mkdirs()
-                        applyPosixPermissions(entryFile, entry.mode)
+                        applyPosixPermissions(entryFile, mode)
                     }
-                    entry.isSymbolicLink -> {
-                        val target = entry.linkName
+                    currentEntry.isSymbolicLink() -> {
+                        val target = currentEntry.linkName
                         entryFile.parentFile.mkdirs()
                         entryFile.delete()
                         try {
@@ -189,10 +191,10 @@ class RootfsManager(private val context: Context) {
                         } catch (e: Exception) {
                             entryFile.writeText(target)
                         }
-                        applyPosixPermissions(entryFile, entry.mode)
+                        applyPosixPermissions(entryFile, mode)
                     }
-                    entry.isHardLink -> {
-                        val target = hardlinkTargets[entry.linkName]
+                    currentEntry.isHardLink() -> {
+                        val target = hardlinkTargets[currentEntry.linkName]
                         entryFile.parentFile.mkdirs()
                         entryFile.delete()
                         if (target != null && target.exists()) {
@@ -202,17 +204,17 @@ class RootfsManager(private val context: Context) {
                                 copyFile(target, entryFile)
                             }
                         } else {
-                            writeEntryContent(tar, entryFile, entry.mode)
+                            writeEntryContent(tar, entryFile, mode)
                         }
                     }
                     else -> {
                         entryFile.parentFile.mkdirs()
-                        writeEntryContent(tar, entryFile, entry.mode)
+                        writeEntryContent(tar, entryFile, mode)
                     }
                 }
 
-                if (entry.linkName.isNotBlank() && !entry.isHardLink && !entry.isSymbolicLink) {
-                    hardlinkTargets[entry.linkName] = entryFile
+                if (currentEntry.linkName.isNotBlank() && !currentEntry.isHardLink() && !currentEntry.isSymbolicLink()) {
+                    hardlinkTargets[currentEntry.linkName] = entryFile
                 }
 
                 if (entriesProcessed % 100 == 0) {
@@ -244,9 +246,9 @@ class RootfsManager(private val context: Context) {
 
     private fun applyPosixPermissions(file: File, mode: Int) {
         try {
-            val readable = (mode and 0o444) != 0
-            val writable = (mode and 0o222) != 0
-            val executable = (mode and 0o111) != 0
+            val readable = (mode and 0x124) != 0
+            val writable = (mode and 0x092) != 0
+            val executable = (mode and 0x049) != 0
             file.setReadable(readable, false)
             file.setWritable(writable, false)
             file.setExecutable(executable, false)

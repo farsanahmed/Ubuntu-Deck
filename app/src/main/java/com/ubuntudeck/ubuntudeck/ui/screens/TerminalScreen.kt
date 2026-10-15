@@ -3,23 +3,22 @@ package com.ubuntudeck.ubuntudeck.ui.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.HorizontalArrangement
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Button
-import androidx.compose.material3.TextField
 import androidx.compose.material3.Card
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,13 +29,14 @@ import android.content.Context
 import com.ubuntudeck.ubuntudeck.R
 import com.ubuntudeck.ubuntudeck.data.RootfsConfig
 import com.ubuntudeck.ubuntudeck.data.RootfsManager
+import com.ubuntudeck.ubuntudeck.data.RootfsManager.RootfsResult
 import com.ubuntudeck.ubuntudeck.data.StorageChecker
 import com.ubuntudeck.ubuntudeck.utils.ProotLauncher
 import com.ubuntudeck.ubuntudeck.utils.ProotLauncher.ProotRunResult
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
 
 /**
@@ -62,27 +62,25 @@ fun TerminalScreen() {
     val rootfsManager = RootfsManager(context)
     val prootLauncher = ProotLauncher(context)
     val storageChecker = StorageChecker(context)
+    val scope: CoroutineScope = rememberCoroutineScope()
 
-    // UI state
-    var downloadProgress by remember { mutableStateOf(0f) }
-    var downloadStatus by remember { mutableStateOf<String?>(null) }
-    var extractProgress by remember { mutableStateOf(0f) }
-    var extractStatus by remember { mutableStateOf<String?>(null) }
-    var isRootfsInstalled by remember { mutableStateOf(rootfsManager.isRootfsInstalled()) }
-    var testCommandOutput by remember { mutableStateOf<String?>(null) }
-    var testCommandRunning by remember { mutableStateOf(false) }
-    var logLines by remember { mutableStateOf(listOf<String>()) }
+    // UI state (using .value to avoid delegate issues)
+    val downloadProgressState = remember { mutableStateOf(0f) }
+    val downloadStatusState = remember { mutableStateOf<String?>(null) }
+    val extractProgressState = remember { mutableStateOf(0f) }
+    val extractStatusState = remember { mutableStateOf<String?>(null) }
+    val isRootfsInstalledState = remember { mutableStateOf(rootfsManager.isRootfsInstalled()) }
+    val testCommandOutputState = remember { mutableStateOf<String?>(null) }
+    val testCommandRunningState = remember { mutableStateOf(false) }
+    val logLinesState = remember { mutableStateOf(listOf<String>()) }
 
-    val freeBytes by remember { mutableStateOf(storageChecker.getFreeSpaceBytes()) }
+    val freeBytes = storageChecker.getFreeSpaceBytes()
     val requiredBytes = rootfsManager.getRequiredFreeSpaceBytes()
     val hasEnoughSpace = freeBytes >= requiredBytes
     val downloadSizeBytes = rootfsManager.getDownloadSizeBytes()
 
-    val scope = rememberCoroutineScope()
-
-    // Helpers
     fun log(message: String) {
-        logLines = logLines + message
+        logLinesState.value = logLinesState.value + message
         Timber.d(message)
     }
 
@@ -101,7 +99,7 @@ fun TerminalScreen() {
         ) {
             androidx.compose.foundation.layout.Row(
                 modifier = Modifier.padding(16.dp),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
                     Text(
@@ -127,28 +125,31 @@ fun TerminalScreen() {
         // Buttons row
         androidx.compose.foundation.layout.Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = androidx.compose.foundation.layout.HorizontalArrangement.SpaceBetween
+            horizontalArrangement = HorizontalArrangement.SpaceBetween
         ) {
             Button(
                 onClick = {
                     scope.launch {
-                        downloadStatus = "Downloading…"
+                        downloadStatusState.value = "Downloading…"
                         try {
                             val result = rootfsManager.download { bytes, total, percent ->
-                                downloadProgress = percent
+                                downloadProgressState.value = percent
                             }
                             when (result) {
-                                is RootfsManager.RootfsResult.Success -> {
-                                    downloadStatus = "Download complete. Verified SHA256."
+                                is RootfsResult.Success -> {
+                                    downloadStatusState.value = "Download complete. Verified SHA256."
                                     log("Download complete: ${result.file.absolutePath}")
                                 }
-                                is RootfsManager.RootfsResult.Failure -> {
-                                    downloadStatus = "Download failed: ${result.message}"
+                                is RootfsResult.Failure -> {
+                                    downloadStatusState.value = "Download failed: ${result.message}"
                                     log("Download failed: ${result.message}")
+                                }
+                                else -> {
+                                    downloadStatusState.value = "Download failed: unknown result"
                                 }
                             }
                         } catch (e: Exception) {
-                            downloadStatus = "Download error: ${e.message}"
+                            downloadStatusState.value = "Download error: ${e.message}"
                             log("Download error: ${e.message}")
                         }
                     }
@@ -160,25 +161,28 @@ fun TerminalScreen() {
             Button(
                 onClick = {
                     scope.launch {
-                        extractStatus = "Extracting…"
+                        extractStatusState.value = "Extracting…"
                         try {
                             val archiveFile = rootfsManager.getArchiveFile()
                             val result = rootfsManager.extract(archiveFile) { percent ->
-                                extractProgress = percent
+                                extractProgressState.value = percent
                             }
                             when (result) {
-                                is RootfsManager.RootfsResult.Success -> {
-                                    extractStatus = "Extraction complete."
-                                    isRootfsInstalled = true
+                                is RootfsResult.Success -> {
+                                    extractStatusState.value = "Extraction complete."
+                                    isRootfsInstalledState.value = true
                                     log("Extraction complete: ${result.file.absolutePath}")
                                 }
-                                is RootfsManager.RootfsResult.Failure -> {
-                                    extractStatus = "Extraction failed: ${result.message}"
+                                is RootfsResult.Failure -> {
+                                    extractStatusState.value = "Extraction failed: ${result.message}"
                                     log("Extraction failed: ${result.message}")
+                                }
+                                else -> {
+                                    extractStatusState.value = "Extraction failed: unknown result"
                                 }
                             }
                         } catch (e: Exception) {
-                            extractStatus = "Extraction error: ${e.message}"
+                            extractStatusState.value = "Extraction error: ${e.message}"
                             log("Extraction error: ${e.message}")
                         }
                     }
@@ -189,11 +193,11 @@ fun TerminalScreen() {
             }
         }
 
-        if (downloadStatus != null) {
-            Text(text = downloadStatus, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
+        downloadStatusState.value?.let { status ->
+            Text(text = status, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
         }
-        if (extractStatus != null) {
-            Text(text = extractStatus, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
+        extractStatusState.value?.let { status ->
+            Text(text = status, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
         }
 
         // Run test command
@@ -214,13 +218,13 @@ fun TerminalScreen() {
                 )
                 Button(
                     onClick = {
-                        if (!isRootfsInstalled) {
-                            testCommandOutput = "Rootfs not installed yet. Download and extract first."
+                        if (!isRootfsInstalledState.value) {
+                            testCommandOutputState.value = "Rootfs not installed yet. Download and extract first."
                             return@Button
                         }
                         scope.launch {
-                            testCommandRunning = true
-                            testCommandOutput = null
+                            testCommandRunningState.value = true
+                            testCommandOutputState.value = null
                             try {
                                 val result: ProotRunResult = withContext(Dispatchers.Default) {
                                     prootLauncher.runProot(
@@ -228,21 +232,21 @@ fun TerminalScreen() {
                                         "cat /etc/os-release && uname -a"
                                     )
                                 }
-                                testCommandOutput = result.output
+                                testCommandOutputState.value = result.output
                                 log("Test command exit=${result.exitCode}\n${result.output}")
                             } catch (e: Exception) {
-                                testCommandOutput = "Error: ${e.message}"
+                                testCommandOutputState.value = "Error: ${e.message}"
                                 log("Test command error: ${e.message}")
                             } finally {
-                                testCommandRunning = false
+                                testCommandRunningState.value = false
                             }
                         }
                     },
-                    enabled = isRootfsInstalled && !testCommandRunning
+                    enabled = isRootfsInstalledState.value && !testCommandRunningState.value
                 ) {
-                    Text(text = if (testCommandRunning) "Running…" else "Run test command")
+                    Text(text = if (testCommandRunningState.value) "Running…" else "Run test command")
                 }
-                testCommandOutput?.let { output ->
+                testCommandOutputState.value?.let { output ->
                     Text(
                         text = output,
                         style = MaterialTheme.typography.bodySmall,
@@ -269,7 +273,7 @@ fun TerminalScreen() {
                 .background(MaterialTheme.colorScheme.surfaceVariant, shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)),
             state = rememberLazyListState()
         ) {
-            items(logLines) { line ->
+            items(logLinesState.value) { line ->
                 Text(
                     text = line,
                     style = MaterialTheme.typography.bodySmall,
