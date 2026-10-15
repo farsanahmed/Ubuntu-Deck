@@ -123,75 +123,70 @@ fun TerminalScreen() {
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        // Buttons row
-        androidx.compose.foundation.layout.Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = androidx.compose.foundation.layout.HorizontalArrangement.SpaceBetween
+        // Buttons (stacked vertically to avoid HorizontalArrangement API issues)
+        Button(
+            onClick = {
+                scope.launch {
+                    downloadStatusState.value = "Downloading…"
+                    try {
+                        val result = rootfsManager.download { bytes, total, percent ->
+                            downloadProgressState.value = percent
+                        }
+                        when (result) {
+                            is RootfsResult.Success -> {
+                                downloadStatusState.value = "Download complete. Verified SHA256."
+                                log("Download complete: ${result.file.absolutePath}")
+                            }
+                            is RootfsResult.Failure -> {
+                                downloadStatusState.value = "Download failed: ${result.message}"
+                                log("Download failed: ${result.message}")
+                            }
+                            else -> {
+                                downloadStatusState.value = "Download failed: unknown result"
+                            }
+                        }
+                    } catch (e: Exception) {
+                        downloadStatusState.value = "Download error: ${e.message}"
+                        log("Download error: ${e.message}")
+                    }
+                }
+            },
+            enabled = hasEnoughSpace
         ) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        downloadStatusState.value = "Downloading…"
-                        try {
-                            val result = rootfsManager.download { bytes, total, percent ->
-                                downloadProgressState.value = percent
-                            }
-                            when (result) {
-                                is RootfsResult.Success -> {
-                                    downloadStatusState.value = "Download complete. Verified SHA256."
-                                    log("Download complete: ${result.file.absolutePath}")
-                                }
-                                is RootfsResult.Failure -> {
-                                    downloadStatusState.value = "Download failed: ${result.message}"
-                                    log("Download failed: ${result.message}")
-                                }
-                                else -> {
-                                    downloadStatusState.value = "Download failed: unknown result"
-                                }
-                            }
-                        } catch (e: Exception) {
-                            downloadStatusState.value = "Download error: ${e.message}"
-                            log("Download error: ${e.message}")
+            Text(text = "Download rootfs")
+        }
+        Button(
+            onClick = {
+                scope.launch {
+                    extractStatusState.value = "Extracting…"
+                    try {
+                        val archiveFile = rootfsManager.getArchiveFile()
+                        val result = rootfsManager.extract(archiveFile) { percent ->
+                            extractProgressState.value = percent
                         }
-                    }
-                },
-                enabled = hasEnoughSpace
-            ) {
-                Text(text = "Download rootfs")
-            }
-            Button(
-                onClick = {
-                    scope.launch {
-                        extractStatusState.value = "Extracting…"
-                        try {
-                            val archiveFile = rootfsManager.getArchiveFile()
-                            val result = rootfsManager.extract(archiveFile) { percent ->
-                                extractProgressState.value = percent
+                        when (result) {
+                            is RootfsResult.Success -> {
+                                extractStatusState.value = "Extraction complete."
+                                isRootfsInstalledState.value = true
+                                log("Extraction complete: ${result.file.absolutePath}")
                             }
-                            when (result) {
-                                is RootfsResult.Success -> {
-                                    extractStatusState.value = "Extraction complete."
-                                    isRootfsInstalledState.value = true
-                                    log("Extraction complete: ${result.file.absolutePath}")
-                                }
-                                is RootfsResult.Failure -> {
-                                    extractStatusState.value = "Extraction failed: ${result.message}"
-                                    log("Extraction failed: ${result.message}")
-                                }
-                                else -> {
-                                    extractStatusState.value = "Extraction failed: unknown result"
-                                }
+                            is RootfsResult.Failure -> {
+                                extractStatusState.value = "Extraction failed: ${result.message}"
+                                log("Extraction failed: ${result.message}")
                             }
-                        } catch (e: Exception) {
-                            extractStatusState.value = "Extraction error: ${e.message}"
-                            log("Extraction error: ${e.message}")
+                            else -> {
+                                extractStatusState.value = "Extraction failed: unknown result"
+                            }
                         }
+                    } catch (e: Exception) {
+                        extractStatusState.value = "Extraction error: ${e.message}"
+                        log("Extraction error: ${e.message}")
                     }
-                },
-                enabled = rootfsManager.getArchiveFile().exists()
-            ) {
-                Text(text = "Extract rootfs")
-            }
+                }
+            },
+            enabled = rootfsManager.getArchiveFile().exists()
+        ) {
+            Text(text = "Extract rootfs")
         }
 
         downloadStatusState.value?.let { status ->
