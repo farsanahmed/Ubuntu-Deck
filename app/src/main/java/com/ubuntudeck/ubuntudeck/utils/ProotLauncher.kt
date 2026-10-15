@@ -107,7 +107,7 @@ class ProotLauncher(private val context: Context) {
 
     fun logProotInfo() {
         Timber.d("ProotLauncher: libDir=${context.applicationInfo.nativeLibraryDir}")
-        Timber.d("ProotLauncher: proot available=$isProotAvailable()")
+        Timber.d("ProotLauncher: proot available=${isProotAvailable()}")
         val path = getProotPath()
         if (path != null) {
             Timber.d("ProotLauncher: proot path=$path exists=${File(path).exists()}")
