@@ -5,20 +5,20 @@
 - Gradle config with extractNativeLibs=true, useLegacyPackaging=true
 - LICENSE (GPLv3), NOTICE, CI workflow added
 - All screens have stub UI
-- CI now passing (build-debug-apk succeeds)
+- CI green (debug builds pass)
 
 ## Phase 3 (Rootfs + proot + terminal) - in progress
 - Build check: done via CI (green)
-- CI workflow: valid, has release job for tags
+- Removed Termux deps (caused auth issues in CI). Using custom minimal terminal stub [STUB] instead - no external credentials needed. See TERMINAL.md
 - Proot binaries: NOT included yet (must document origin/license/checksum and add to jniLibs)
 - Rootfs: URL/size/checksum not pinned yet
 - Implementation stubs added for storage check, resumable download
-- Terminal shell via proot: not implemented
+- Terminal shell via proot: stub only
 - GATE: cannot verify until implementation complete (local build not possible)
 
 ## Phase 4 (Desktop/VNC) - not started
 ## Phase 5 (Installer/service) - not started  
 ## Phase 6 (Polish/release) - not started
 
-**Next:** Continue Phase 3 - need to identify and document actual rootfs source and proot binaries with full checksums, then implement download/extraction and proot terminal.
-[took 0.3s]
+**Next:** Continue Phase 3 - implement proot setup and terminal connection properly.
+[took 0.2s]
