@@ -29,3 +29,11 @@
 - RootfsManager enhanced with progress tracking, storage checks [STUB]
 - ProotLauncher enhanced with env setup (PROOT_LOADER, PROOT_TMP_DIR) [STUB]
 - Terminal/VNC views updated with clearer [STUB] markers
+
+## Phase 3 Status
+- Infrastructure in place (RootfsManager, ProotLauncher) with clear [STUB] markers
+- UI updated with clearer stub text
+- Documentation added for rootfs sources and proot setup
+- Cannot proceed to full functional implementation without verified binaries (proot, rootfs). Following STOP CONDITIONS - need to document what's blocked.
+
+**BLOCKED for full functionality:** Missing verified proot binary + loader (arm64) with checksum, and pinned rootfs URL/size/SHA256. These are external artifacts that must be verified.
