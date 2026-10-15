@@ -180,11 +180,17 @@ class RootfsManager(private val context: Context) {
                 } else {
                     entryFile.parentFile.mkdirs()
                     val out = FileOutputStream(entryFile).buffered()
-                    entry?.transferTo(out)
+                    val buf = ByteArray(8192)
+                    var n: Int
+                    while (tar.read(buf).also { n = it } != -1) {
+                        out.write(buf, 0, n)
+                    }
                     out.close()
                     // Set executable bit for scripts/binaries
                     entryFile.setExecutable(true, false)
                 }
+
+
 
                 if (entriesProcessed % 100 == 0) {
                     // Estimate progress (no exact total available without scanning tar first)
