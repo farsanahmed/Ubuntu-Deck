@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UbuntuDeck</string>
+    <string name="tab_terminal">Terminal</string>
+    <string name="tab_desktop">Desktop</string>
+    <string name="tab_installer">Installer</string>
+    <string name="tab_settings">Settings</string>
+    <string name="stub_placeholder">[STUB] This screen is not yet implemented</string>
+    <string name="service_notification_title">UbuntuDeck</string>
+    <string name="service_notification_text">Session running</string>
+    <string name="android12_warning">WARNING: Android 12+ may kill background processes. If session stops unexpectedly, disable phantom process killing via ADB: adb shell settings put global settings_enable_monitor_phantom_procs false (may require additional OEM-specific steps)</string>
+</resources>
+[took 0.1s]

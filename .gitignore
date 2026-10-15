@@ -1,0 +1,44 @@
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
+
+# IntelliJ
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
+
+# Native libs (we may add proot binaries later - note these are large)
+app/src/main/jniLibs/**/*.so
+app/src/main/jniLibs/**/proot
+
+# Rootfs (very large)
+app/src/main/assets/rootfs*
+*.tar.gz
+*.tar.xz
+*.squashfs
+
+# Logs
+*.log
+[took 0.1s]

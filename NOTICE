@@ -1,0 +1,33 @@
+NOTICE
+
+UbuntuDeck - A native Android app running Ubuntu 22.04 XFCE4 desktop
+
+This product includes software licensed under various licenses:
+
+1. proot
+   - License: GPLv2/GPLv3
+   - Source: https://github.com/termux/proot
+   - Copyright: termux/proot contributors
+
+2. Termux terminal-emulator and terminal-view libraries
+   - License: GPLv3
+   - Source: https://github.com/termux/termux-app
+   - Copyright: Termux contributors
+
+3. TigerVNC (used inside Ubuntu rootfs)
+   - License: GPLv2
+   - Source: https://github.com/TigerVNC/tigervnc
+
+4. XFCE4 Desktop Environment
+   - License: GPL/LGPL
+   - Source: https://xfce.org/
+
+5. Ubuntu Jammy 22.04 rootfs (udroid)
+   - Source: udroid images from RandomCoderOrg/udroid projects
+   - Note: The Ubuntu rootfs contains various packages with their respective licenses
+   - More info: https://github.com/RandomCoderOrg/ubuntu-on-android
+
+Android app code: GPLv3
+
+For full license texts, see LICENSE file and respective project repositories.
+[took 0.2s]
