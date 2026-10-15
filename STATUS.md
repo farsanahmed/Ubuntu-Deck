@@ -21,4 +21,3 @@
 ## Phase 6 (Polish/release) - not started
 
 **Next:** Continue Phase 3 - implement proot setup and terminal connection properly.
-[took 0.2s]

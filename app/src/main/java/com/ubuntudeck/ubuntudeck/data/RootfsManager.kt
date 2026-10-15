@@ -221,4 +221,3 @@ sealed class RootfsResult {
     data class Success(val file: File) : RootfsResult()
     data class Failure(val message: String) : RootfsResult()
 }
-[took 0.3s]

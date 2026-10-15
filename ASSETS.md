@@ -54,4 +54,3 @@ This document tracks all external binaries and archives with their sources, lice
 - All binaries in jniLibs/arm64-v8a/ are extracted to nativeLibraryDir at install time via `useLegacyPackaging = true`.
 - proot will be launched via ProcessBuilder from nativeLibraryDir. PROOT_TMP_DIR set to a writable app directory.
 - No Termux app dependency — terminal view comes from Gradle dependency.
-[took 0.5s]

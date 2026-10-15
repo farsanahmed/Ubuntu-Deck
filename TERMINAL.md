@@ -15,4 +15,3 @@
 
 ## Next
 Implement simple terminal view that can attach to a shell process (proot) via ProcessBuilder.
-[took 0.2s]

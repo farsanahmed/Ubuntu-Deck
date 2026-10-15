@@ -47,12 +47,14 @@ class ProotLauncher(private val context: Context) {
         binds.add("$appInternal:$appInternal")
 
         // External storage dirs if available
-        val extDirs = context.externalFilesDirs
+        val extDirs = context.getExternalFilesDirs(null)
         for (i in extDirs.indices) {
             val dir = extDirs[i]
-            val abs = dir.absolutePath
-            if (abs != appInternal) {
-                binds.add("$abs:$abs")
+            if (dir != null) {
+                val abs = dir.absolutePath
+                if (abs != appInternal) {
+                    binds.add("$abs:$abs")
+                }
             }
         }
 
@@ -112,4 +114,3 @@ class ProotLauncher(private val context: Context) {
         }
     }
 }
-[took 0.2s]
