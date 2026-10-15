@@ -54,7 +54,7 @@ fun InstallerScreen() {
         ),
         InstallerItem.Package(
             title = "Claude Code",
-            summary = "curl -fsSL https://claude.ai/install.sh \| bash\nPATH fix: ~/.bashrc",
+            summary = "curl -fsSL https://claude.ai/install.sh | bash\nPATH fix: ~/.bashrc",
             onInstall = {}
         ),
         InstallerItem.Package(
