@@ -14,7 +14,7 @@
 - Rootfs pinned: https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-arm64-xfce4-V3MBB3.tar.gz (~2GB compressed, SHA256 d529...a6da8, ~7GB free required)
 - Proot binary: jniLibs/arm64-v8a/libproot.so (1,560,648 bytes), from ysdragon/proot-static v5.4.0, GPLv2, SHA256 45e8...ce79, static-linked self-contained
 - ProotLauncher.kt (REAL implementation):
-  - Binds: /dev:/dev, /proc:/proc, /sys:/sys, app files dir, external storage dirs, /storage, /sdcard
+  - Binds: each as separate -b flag: /dev:/dev, /proc:/proc, /sys:/sys, app files dir, external storage dirs, /storage, /sdcard
   - --link2symlink flag (Android blocks link() in app storage)
   - Env: PROOT_TMP_DIR, HOME, PATH, TERM, LANG, PROOT_NO_SECCOMP (empty by default)
   - Captures combined stdout+stderr via ProcessBuilder.redirectErrorStream(true)

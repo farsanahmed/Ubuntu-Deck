@@ -70,8 +70,10 @@ class ProotLauncher(private val context: Context) {
         args.add("-0") // run as root (fake uid 0)
         args.add("-k") // dummy sysctl
         args.add("--link2symlink") // Android blocks link() in app storage
-        args.add("-b")
-        args.add(binds.joinToString(","))
+        for (bind in binds) {
+            args.add("-b")
+            args.add(bind)
+        }
         args.add("-w")
         args.add(workingDir)
         args.add("/bin/bash")
