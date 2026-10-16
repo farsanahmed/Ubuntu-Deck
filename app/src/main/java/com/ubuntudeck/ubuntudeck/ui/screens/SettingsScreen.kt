@@ -45,7 +45,7 @@ sealed class SettingItem {
 fun SettingsScreen() {
     val context = LocalContext.current
     val prefs = context.getSharedPreferences("ubuntudeck_prefs", Context.MODE_PRIVATE)
-    var disableSeccomp by remember { mutableStateOf(prefs.getBoolean("disable_seccomp", false)) }
+    val disableSeccompState by remember { mutableStateOf(prefs.getBoolean("disable_seccomp", false)) }
 
     val items = listOf<SettingItem>(
         SettingItem.Section("Session"),
@@ -67,9 +67,9 @@ fun SettingsScreen() {
         SettingItem.ToggleItem(
             title = "Disable seccomp (PROOT_NO_SECCOMP=1)",
             summary = "Off by default. Enable only if proot crashes on your device.",
-            checked = disableSeccomp,
+            checked = disableSeccompState.value,
             onCheckedChange = { value ->
-                disableSeccomp = value
+                disableSeccompState.value = value
                 prefs.edit().putBoolean("disable_seccomp", value).apply()
             }
         ),
@@ -146,8 +146,11 @@ fun SettingsScreen() {
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Switch(
-                                    checked = item.checked,
-                                    onCheckedChange = item.onCheckedChange
+                                    checked = disableSeccompState.value,
+                                    onCheckedChange = { value ->
+                                        disableSeccompState.value = value
+                                        prefs.edit().putBoolean("disable_seccomp", value).apply()
+                                    }
                                 )
                             }
                         }
