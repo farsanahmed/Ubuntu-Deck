@@ -6,22 +6,25 @@ A native Android app called "UbuntuDeck": a real Ubuntu 22.04 (Jammy) XFCE4 desk
 
 **Build Status:** Scaffold created - ready to build
 
-**What's stubbed:**
-- All UI screens (Terminal, Desktop, Installer, Settings) show [STUB] placeholder (marked in UI)
-- RootfsManager: stub methods for installation, storage checks
-- ProotLauncher: stub methods, no actual execution
-- No native binaries (proot, loader) included yet - must be added in Phase 3
-- No actual rootfs included/downloaded
-- No VNC client implementation
-- No terminal integration with proot yet
+**What's implemented (Phase A):**
+- RootfsManager: real implementation for download, verification, extraction
+- ProotLauncher: real implementation for running proot with proper binds and environment
+- TerminalScreen: real UI for rootfs management and test command execution
+- libproot.so binary included in jniLibs/arm64-v8a
 
-**What's next (Phase 3):**
-- Determine and pin rootfs source URL, size, and checksum
-- Source/build proot binary and loader for arm64, add to jniLibs with proper setup
-- Implement rootfs download with resume capability
-- Implement extraction with progress UI
-- Implement storage space checks (~7GB free required)
-- Get proot shell working in terminal tab
+**What's stubbed:**
+- TerminalView: [STUB] placeholder - awaiting PTY-based terminal implementation
+- DesktopScreen: stub UI only
+- VncClientView: stub UI only
+- InstallerScreen: stub UI only
+- UbuntuDeckService: foreground service skeleton
+- SettingsScreen: skeleton with seccomp toggle (not wired to proot)
+
+**What's next (Phase B):**
+- Implement real interactive terminal in TerminalView using PTY connected to proot
+- Wire SettingsScreen seccomp toggle to ProotLauncher environment
+- Implement TigerVNC + XFCE4 desktop and embedded VNC viewer
+- Implement installer screen, service presets, and polish
 
 **Licensing:**
 - This app is licensed under GPLv3 (see LICENSE)

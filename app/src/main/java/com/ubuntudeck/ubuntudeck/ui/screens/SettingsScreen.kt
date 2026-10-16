@@ -17,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import android.content.Context
 import com.ubuntudeck.ubuntudeck.R
 
 sealed class SettingItem {
@@ -41,6 +43,10 @@ sealed class SettingItem {
  */
 @Composable
 fun SettingsScreen() {
+    val context = LocalContext.current
+    val prefs = context.getSharedPreferences("ubuntudeck_prefs", Context.MODE_PRIVATE)
+    var disableSeccomp by remember { mutableStateOf(prefs.getBoolean("disable_seccomp", false)) }
+
     val items = listOf<SettingItem>(
         SettingItem.Section("Session"),
         SettingItem.TextItem(
@@ -61,8 +67,11 @@ fun SettingsScreen() {
         SettingItem.ToggleItem(
             title = "Disable seccomp (PROOT_NO_SECCOMP=1)",
             summary = "Off by default. Enable only if proot crashes on your device.",
-            checked = false,
-            onCheckedChange = {}
+            checked = disableSeccomp,
+            onCheckedChange = { value ->
+                disableSeccomp = value
+                prefs.edit().putBoolean("disable_seccomp", value).apply()
+            }
         ),
         SettingItem.Section("About"),
         SettingItem.TextItem(

@@ -1,6 +1,7 @@
 package com.ubuntudeck.ubuntudeck.utils
 
 import android.content.Context
+import android.content.SharedPreferences
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.File
@@ -87,9 +88,13 @@ class ProotLauncher(private val context: Context) {
      * PROOT_TMP_DIR -> writable app cache dir (not data exec path).
      * PROOT_NO_SECCOMP=1 optional: disable seccomp filtering if proot crashes on the device.
      */
-    fun buildProotEnvironment(disableSeccomp: Boolean = false): Map<String, String> {
+    fun buildProotEnvironment(): Map<String, String> {
         val tmpDir = File(context.cacheDir, "proot_tmp")
         tmpDir.mkdirs()
+
+        // Read seccomp preference (default false)
+        val prefs = context.getSharedPreferences("ubuntudeck_prefs", Context.MODE_PRIVATE)
+        val disableSeccomp = prefs.getBoolean("disable_seccomp", false)
 
         return mapOf(
             "PROOT_TMP_DIR" to tmpDir.absolutePath,
@@ -113,9 +118,9 @@ class ProotLauncher(private val context: Context) {
         val environment: String  // env vars used
     )
 
-    fun runProot(rootfsDir: String, command: String, workingDir: String = "/", disableSeccomp: Boolean = false): ProotRunResult {
+    fun runProot(rootfsDir: String, command: String, workingDir: String = "/"): ProotRunResult {
         val cmd = buildProotCommand(rootfsDir, workingDir)
-        val env = buildProotEnvironment(disableSeccomp)
+        val env = buildProotEnvironment()
 
         Timber.d("ProotLauncher: running $cmd")
         Timber.d("ProotLauncher: env=$env")
