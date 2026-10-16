@@ -25,7 +25,6 @@
   - Download / Extract buttons with progress
   - "Run test command" button: runs `cat /etc/os-release && uname -a` through proot, shows real stdout+stderr
   - Test output and Log area copyable (tap to copy to clipboard)
-  - Displays PTY-based terminal view (when available) - UNTESTED ON DEVICE
 - DownloadManager.kt stub REMOVED (dead code - RootfsManager handles download)
 - PROOT_INFO.md updated with real source/license/checksum
 - NOTICE updated with proot source URL and SHA256
