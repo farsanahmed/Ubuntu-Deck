@@ -21,6 +21,20 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 35
+          build-tools: 35.0.0
+          ndk-version: 25.2.9519653
+
+      - name: Accept Android SDK licenses
+        run: |
+          mkdir -p "$ANDROID_SDK_ROOT/licenses"
+          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
+          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd\nebf0f14a6a7e8c3d3b6f4b5c7a8d9e0f1a2b3c4d5" >> "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
+          yes | sdkmanager --licenses
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -28,6 +42,11 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Check Java and Gradle version
+        run: |
+          java -version
+          ./gradlew -v
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
@@ -64,6 +83,20 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 35
+          build-tools: 35.0.0
+          ndk-version: 25.2.9519653
+
+      - name: Accept Android SDK licenses
+        run: |
+          mkdir -p "$ANDROID_SDK_ROOT/licenses"
+          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
+          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd\nebf0f14a6a7e8c3d3b6f4b5c7a8d9e0f1a2b3c4d5" >> "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
+          yes | sdkmanager --licenses
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
