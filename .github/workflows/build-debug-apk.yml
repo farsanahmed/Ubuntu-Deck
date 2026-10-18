@@ -21,14 +21,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 35
-          build-tools: 35.0.0
-          ndk-version: 25.2.9519653
-          accept-licenses: true
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -36,11 +28,6 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Check Java and Gradle version
-        run: |
-          java -version
-          ./gradlew -v
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
@@ -77,14 +64,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 35
-          build-tools: 35.0.0
-          ndk-version: 25.2.9519653
-          accept-licenses: true
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
