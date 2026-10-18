@@ -1,34 +1,111 @@
-# UbuntuDeck
+# DroidLab - Native Android Developer Toolkit
 
-A native Android app called "UbuntuDeck": a real Ubuntu 22.04 (Jammy) XFCE4 desktop running fully inside the app, with no Termux or Termux:X11 needed. Built with Kotlin + Jetpack Compose, targeting arm64-v8a.
+A comprehensive native Android app for developers, featuring:
+- Dashboard with quick access to tools
+- Device information (Android version, model, RAM, storage)
+- JSON formatter/validator
+- Base64 encoder/decoder
+- SHA-256 hashing tool
+- Unit converter (length, weight, temperature, volume)
+- Notes manager with local storage
+- Task manager with local storage
+- Terminal-style interface with safe built-in commands
+- Settings
+- Offline support
+- Dark/Light themes
 
-## Phase 2 (Scaffold) - Status
+## Features
 
-**Build Status:** Scaffold created - ready to build
+### Dashboard
+Welcome screen with device info preview and quick action buttons to navigate to different tools.
 
-**What's stubbed:**
-- All UI screens (Terminal, Desktop, Installer, Settings) show [STUB] placeholder (marked in UI)
-- RootfsManager: stub methods for installation, storage checks
-- ProotLauncher: stub methods, no actual execution
-- No native binaries (proot, loader) included yet - must be added in Phase 3
-- No actual rootfs included/downloaded
-- No VNC client implementation
-- No terminal integration with proot yet
+### Device Info
+Displays detailed information about the device:
+- Manufacturer and model
+- Android version and API level
+- CPU ABI
+- Total and available RAM
+- Storage usage
 
-**What's next (Phase 3):**
-- Determine and pin rootfs source URL, size, and checksum
-- Source/build proot binary and loader for arm64, add to jniLibs with proper setup
-- Implement rootfs download with resume capability
-- Implement extraction with progress UI
-- Implement storage space checks (~7GB free required)
-- Get proot shell working in terminal tab
+### Tools
+- **JSON Formatter & Validator**: Validate and pretty-print JSON
+- **Base64 Encoder/Decoder**: Encode text to Base64 or decode Base64 to text
+- **SHA-256 Hasher**: Generate SHA-256 hash of input text
+- **Unit Converter**: Convert between various units (length, weight, temperature, volume)
 
-**Licensing:**
-- This app is licensed under GPLv3 (see LICENSE)
-- Bundles GPL components (proot, Termux libs) - see NOTICE
-- Rootfs from udroid (Ubuntu-based) has various licenses
+### Notes Manager
+Create, view, and manage notes with local storage persistence.
 
-## Requirements
-- arm64-v8a device
-- ~7GB free storage (required)
-- Android 10+ recommended
+### Task Manager
+Create tasks with title, description, completion status, and timestamps.
+
+### Terminal
+Simple terminal interface for executing safe shell commands (limited to basic commands for safety).
+
+### Settings
+Placeholder for future settings (theme toggle, etc.)
+
+## Screenshots
+
+*(Add screenshots here)*
+
+## Installation
+
+1. Download the latest APK from the [GitHub Releases](#) page
+2. Install on your Android device (requires Android 7.0+ / API 24+)
+3. Grant necessary permissions if prompted
+
+## Build from Source
+
+### Prerequisites
+- Android Studio Arctic Fox or later
+- JDK 17
+- Android SDK with API 35
+
+### Steps
+1. Clone the repository
+2. Open in Android Studio
+3. Sync Gradle
+4. Connect an Android device or start an emulator
+5. Click Run
+
+### Generating Signed APK
+1. Build > Generate Signed Bundle / APK
+2. Follow the wizard
+
+## Architecture
+
+- **Language**: Kotlin
+- **UI**: Jetpack Compose
+- **Architecture**: MVVM (simplified for this app)
+- **Data Storage**: Android DataStore (Preferences) for notes and tasks
+- **Dependencies**: 
+  - AndroidX Core, Lifecycle, Activity Compose
+  - Jetpack Compose BOM (Material3)
+  - Navigation Compose
+  - WorkManager
+  - DataStore Preferences
+  - OKHttp
+  - Commons Compress
+  - Timber
+  - Coil
+  - Gson (for JSON parsing)
+  - Termux Terminal View and Emulator (for future terminal implementation)
+
+## Permissions
+
+The app requests the following permissions:
+- INTERNET (for future online features)
+- POST_NOTIFICATIONS (for service notifications)
+- FOREGROUND_SERVICE (to keep background services alive)
+- FOREGROUND_SERVICE_SPECIAL_USE (Android 13+)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Based on the UbuntuDeck project
+- Uses [Termux Terminal](https://github.com/termux/termux-app) for terminal components
+- Uses [Proot](https://github.com/Proot-me/Proot) for Linux environment (in original UbuntuDeck)
