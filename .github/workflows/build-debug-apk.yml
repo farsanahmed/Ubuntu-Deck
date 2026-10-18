@@ -21,19 +21,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 35
-          build-tools: 35.0.0
-          ndk-version: 25.2.9519653
-
-      - name: Accept Android SDK licenses
+      - name: Install Android SDK
         run: |
-          mkdir -p "$ANDROID_SDK_ROOT/licenses"
-          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
-          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd\nebf0f14a6a7e8c3d3b6f4b5c7a8d9e0f1a2b3c4d5" >> "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
-          yes | sdkmanager --licenses
+          mkdir -p $HOME/android-sdk
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+          unzip -q cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mkdir -p $HOME/android-sdk/cmdline-tools/latest/bin
+          mv $HOME/android-sdk/cmdline-tools/tools/* $HOME/android-sdk/cmdline-tools/latest/bin/
+          echo "y" | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+          echo "y" | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -84,19 +82,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 35
-          build-tools: 35.0.0
-          ndk-version: 25.2.9519653
-
-      - name: Accept Android SDK licenses
+      - name: Install Android SDK
         run: |
-          mkdir -p "$ANDROID_SDK_ROOT/licenses"
-          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
-          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd\nebf0f14a6a7e8c3d3b6f4b5c7a8d9e0f1a2b3c4d5" >> "$ANDROID_SDK_ROOT/licenses/android-sdk-license"
-          yes | sdkmanager --licenses
+          mkdir -p $HOME/android-sdk
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+          unzip -q cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mkdir -p $HOME/android-sdk/cmdline-tools/latest/bin
+          mv $HOME/android-sdk/cmdline-tools/tools/* $HOME/android-sdk/cmdline-tools/latest/bin/
+          echo "y" | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+          echo "y" | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
