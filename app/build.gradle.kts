@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ubuntudeck.ubuntudeck"
+    namespace = "com.droidlab.droidlab"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.ubuntudeck.ubuntudeck"
+        applicationId = "com.droidlab.droidlab"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.termux.terminal.view)
     implementation(libs.termux.terminal.emulator)
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
