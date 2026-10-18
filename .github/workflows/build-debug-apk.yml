@@ -93,3 +93,27 @@ jobs:
         with:
           name: droidlab-release-apk
           path: app/build/outputs/apk/release/app-release*.apk
+
+  release_debug:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: droidlab-debug-apk
+          path: ./apk
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: debug-${{ github.sha }}
+          name: Debug build on ${{ github.sha }}
+          files: ./apk/app-debug.apk
