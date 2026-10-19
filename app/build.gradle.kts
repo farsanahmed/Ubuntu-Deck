@@ -78,8 +78,6 @@ dependencies {
     implementation(libs.commons.compress)
     implementation(libs.timber)
     implementation(libs.coil.compose)
-    implementation(libs.termux.terminal.view)
-    implementation(libs.termux.terminal.emulator)
     implementation(libs.gson)
 
     testImplementation(libs.junit)
