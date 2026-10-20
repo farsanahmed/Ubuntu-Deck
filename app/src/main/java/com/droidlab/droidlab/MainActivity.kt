@@ -32,23 +32,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.droidlab.droidlab.ui.theme.DroidLabTheme
-import androidx.compose.material3.icons.Icons
-import androidx.compose.material3.icons.filled.Dashboard
-import androidx.compose.material3.icons.filled.Info
-import androidx.compose.material3.icons.filled.ManageSearch
-import androidx.compose.material3.icons.filled.EditNote
-import androidx.compose.material3.icons.filled.CheckBox
-import androidx.compose.material3.icons.filled.Compass
-import androidx.compose.material3.icons.filled.Settings
 
-sealed class Screen(val route: String, val resourceId: Int, val icon: androidx.compose.material3.icons.Icons) {
-    object Dashboard : Screen("dashboard", R.string.tab_dashboard, Icons.Default.Dashboard)
-    object DeviceInfo : Screen("device_info", R.string.tab_device_info, Icons.Default.Info)
-    object Tools : Screen("tools", R.string.tab_tools, Icons.Default.ManageSearch)
-    object Notes : Screen("notes", R.string.tab_notes, Icons.Default.EditNote)
-    object Tasks : Screen("tasks", R.string.tab_tasks, Icons.Default.CheckBox)
-    object Terminal : Screen("terminal", R.string.tab_terminal, Icons.Default.Compass)
-    object Settings : Screen("settings", R.string.tab_settings, Icons.Default.Settings)
+sealed class Screen(val route: String, val resourceId: Int, val iconId: Int) {
+    object Dashboard : Screen("dashboard", R.string.tab_dashboard, android.R.drawable.ic_menu_dashboard)
+    object DeviceInfo : Screen("device_info", R.string.tab_device_info, android.R.drawable.ic_menu_info_details)
+    object Tools : Screen("tools", R.string.tab_tools, android.R.drawable.ic_menu_manage)
+    object Notes : Screen("notes", R.string.tab_notes, android.R.drawable.ic_menu_edit)
+    object Tasks : Screen("tasks", R.string.tab_tasks, android.R.drawable.ic_menu_task)
+    object Terminal : Screen("terminal", R.string.tab_terminal, android.R.drawable.ic_menu_compass)
+    object Settings : Screen("settings", R.string.tab_settings, android.R.drawable.ic_menu_set_as)
 }
 
 class MainActivity : ComponentActivity() {
@@ -81,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             NavigationBarItem(
                                 icon = {
                                     Icon(
-                                        imageVector = screen.icon,
+                                        painter = painterResource(id = screen.iconId),
                                         contentDescription = null
                                     )
                                 },
@@ -102,42 +94,4 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
-                            navController = navController,
-                            startDestination = Screen.Dashboard.route,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            composable(Screen.Dashboard.route) { DashboardScreen() }
-                            composable(Screen.DeviceInfo.route) { DeviceInfoScreen() }
-                            composable(Screen.Tools.route) { ToolsScreen() }
-                            composable(Screen.Notes.route) { NotesScreen() }
-                            composable(Screen.Tasks.route) { TasksScreen() }
-                            composable(Screen.Terminal.route) { TerminalScreen() }
-                            composable(Screen.Settings.route) { SettingsScreen() }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CenterAlignedTopAppBar(title: @Composable () -> Unit) {
-    TopAppBar(
-        title = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentSize(align = Alignment.Center),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                title()
-            }
-        },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        )
-    )
-}
+            
