@@ -91,7 +91,45 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-                ) { innerPadding ->
+                } { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
-            
+                            navController = navController,
+                            startDestination = Screen.Dashboard.route,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            composable(Screen.Dashboard.route) { DashboardScreen() }
+                            composable(Screen.DeviceInfo.route) { DeviceInfoScreen() }
+                            composable(Screen.Tools.route) { ToolsScreen() }
+                            composable(Screen.Notes.route) { NotesScreen() }
+                            composable(Screen.Tasks.route) { TasksScreen() }
+                            composable(Screen.Terminal.route) { TerminalScreen() }
+                            composable(Screen.Settings.route) { SettingsScreen() }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CenterAlignedTopAppBar(title: @Composable () -> Unit) {
+    TopAppBar(
+        title = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(align = Alignment.Center),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                title()
+            }
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
+}
